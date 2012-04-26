@@ -1,9 +1,26 @@
 {
-    "name": "application-name"
-  , "version": "0.0.1"
-  , "private": true
-  , "dependencies": {
-      "express": "2.5.8"
-    , "jade": ">= 0.0.1"
-  }
+  "name": "CloudReap",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "2.5.8",
+    "jade": ">= 0.0.1",
+    "hook.io": "0.8.x",
+    "socket.io": "0.9.x",
+    "uglify-js": "1.2.x",
+    "ini": "1.0.x",
+    "stack-trace": "0.0.x",
+    "eventemitter2": "0.4.x"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "author": "Ryan Dick <noxinoobin@gmail.com>",
+  "description": "Sound Cloud ripper webapp",
+  "repository": {
+    "url": "git@bitbucket.org:ryandick/cloudreaper.git"
+  },
+  "main": "app.js"
 }
