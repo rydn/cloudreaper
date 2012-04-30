@@ -17,7 +17,15 @@ socket.on('reaper::fetching', function(data) {
 socket.on('reaper::complete', function(data) {
 	if (data) {
 		if (data.reqId == $('#sid').html()) {
-			$('#completeList').append('<li>' + data.data + '</li>');
+			$('#completeList').append('<li>' + data.data + '<audio controls src="http://localhost:3000/listen/Twelv/Speak%20To%20Me%20Computer.mp3"></audio></li>');
+
+		}
+	}
+});
+socket.on('reaper::error', function(data) {
+	if (data) {
+		if (data.reqId == $('#sid').html()) {
+			$('#completeList').append('<li> ERROR </li>');
 		}
 	}
 });

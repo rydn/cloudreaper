@@ -5,7 +5,10 @@
 var express = require('express'),
 
   hookio = require('hook.io'),
+  util = require('util'),
   cloudreaper, fs = require('fs'),
+  sounds = require('./lib/filestreamer.js'),
+  songs = require('./lib/songs.js').songs,
   routes = require('./routes');
 
 var reaper = hookio.createHook({
@@ -48,9 +51,45 @@ app.get('/:artist/', function(req, res) {
       });
       reaper.on('*::complete', function(data) {
         socket.emit('reaper::complete', data);
+
+      });
+      reaper.on('*::exit', function(data) {
+        songs.getArtists(function(err, songsObj) {
+          console.log(songsObj);
+          socket.emit('reaper::songlist', songsObj);
+        });
+      });
+      reaper.on('*::error', function(data) {
+        socket.emit('reaper::error', data);
       });
     });
   });
+});
+
+app.get('/listen/:artist/:file/', function(req, res) {
+  //set headers
+  res.writeHead(206, {
+    "Content-Range": "bytes 0-4349499/4349499",
+    "Accept-Ranges": "bytes",
+    "Content-Length": 64 * 1024,
+    "Content-Type": "audio/mpeg"
+  });
+
+  //mp3 file stream
+  var readStream = fs.createReadStream('./sounds/' + req.params.artist + '/' + req.params.file, {
+    flags: 'r',
+    encoding: 'binary',
+    fd: null,
+    mode: 666,
+    bufferSize: 64 * 1024
+  });
+
+  //pipe this to the resource
+  readStream.on('end', function() {
+    util.debug('file end!');
+  }).on('error', function(err) {
+    util.debug('file err: ' + err);
+  }).pipe(res);
 });
 
 app.listen(3000, function() {
